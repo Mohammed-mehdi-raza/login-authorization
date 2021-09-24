@@ -31,7 +31,7 @@ const signup = (req, res) => {
             });
 
         } else {
-            res.send('password does not match');
+            res.send("password does not match");
         }
     } catch (error) {
         console.log(error);
