@@ -1,5 +1,20 @@
 const register = require('../models/register.js');
 const bcrypt = require('bcryptjs');
+//const flash = require('connect-flash');
+
+const index = (req, res) => {
+    res.render("index", {
+        serverSuccess: req.flash('server-success'),
+        serverError: req.flash('server-error')
+    });
+};
+
+const registers = (req, res) => {
+    res.render("register", {
+        serverSuccess: req.flash('server-success'),
+        serverError: req.flash('server-error')
+    });
+};
 
 const signup = (req, res) => {
     try {
@@ -24,14 +39,16 @@ const signup = (req, res) => {
                             user.password = hash;
                             const result = await user.save();
                             console.log(result);
-                            res.send("success");
+                            req.flash("server-success", "user added successfully");
+                            res.redirect("/register");
                         }
                     });
                 }
             });
 
         } else {
-            res.send("password does not match");
+            req.flash("server-error", "password does not match");
+            res.redirect("/register");
         }
     } catch (error) {
         console.log(error);
@@ -45,17 +62,23 @@ const log = async(req, res) => {
         const newu = await register.findOne({
             username: name
         });
-        bcrypt.compare(pass, newu.password, (err, result) => {
-            if (err) {
-                console.log(`error in comparng bcrypt: ${err}`);
-            } else if (result) {
-                res.send(newu);
-            } else {
-                res.send("Invalid username or password");
-            }
-        });
+        if (newu == null) {
+            req.flash("server-error", "invalid username or password");
+            res.redirect("/index");
+        } else {
+            bcrypt.compare(pass, newu.password, (err, result) => {
+                if (err) {
+                    console.log(`error in comparng bcrypt: ${err}`);
+                } else if (result) {
+                    res.send(newu);
+                } else {
+                    req.flash("server-error", "invalid username or password");
+                    res.redirect("/index");
+                }
+            });
+        }
     } catch (error) {
         console.log(error);
     }
 };
-module.exports = { signup, log };
+module.exports = { signup, log, index, registers };

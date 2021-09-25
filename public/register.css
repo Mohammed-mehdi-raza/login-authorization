@@ -103,3 +103,15 @@ a:hover {
     cursor: pointer;
     color: #a445b2;
 }
+
+.success {
+    background-color: rgb(116, 201, 116);
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.error {
+    background-color: rgb(235, 17, 10);
+    text-transform: capitalize;
+    text-align: center;
+}

@@ -119,3 +119,15 @@ p a {
 #l:hover {
     color: #a445b2;
 }
+
+.success {
+    background-color: rgb(116, 201, 116);
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.error {
+    background-color: rgb(240, 24, 16);
+    text-transform: capitalize;
+    text-align: center;
+}

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login form</title>
-    <link rel="stylesheet" href="register.css ">
+    <link rel="stylesheet" href="register.css">
 </head>
 
 <body>
@@ -16,13 +16,19 @@
             <div class="list">
                 <ul>
                     <li class="index">
-                        <a href=" index.html ">Login</a>
+                        <a href="index">Login</a>
                     </li>
                     <li class="register">
-                        <a href="register.html ">Register</a>
+                        <a href="register">Register</a>
                     </li>
                 </ul>
             </div>
+            {{#if serverSuccess}}
+            <div class="success">{{serverSuccess}}</div>
+            {{/if}}
+            {{#if serverError}}
+            <div class="error">{{serverError}}</div>
+            {{/if}}
             <div class="s">
                 <form action="signup" method="POST" class="signup ">
                     <input type="text" placeholder="First name" name="firstname" id="first" required>
