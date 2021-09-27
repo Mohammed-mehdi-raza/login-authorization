@@ -70,7 +70,9 @@ const log = async(req, res) => {
                 if (err) {
                     console.log(`error in comparng bcrypt: ${err}`);
                 } else if (result) {
-                    res.send(newu);
+                    res.render("user", {
+                        user: newu
+                    });
                 } else {
                     req.flash("server-error", "invalid username or password");
                     res.redirect("/index");

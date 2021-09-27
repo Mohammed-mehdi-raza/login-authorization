@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="user.css">
+    <title>Home</title>
+</head>
+<body>
+<div class="container">
+    <div class="personal">
+        <h1 class="head">personal details</h1><hr/>
+        <div class="detail">
+            <ul class="list">
+            <li class="info">First-name: {{user.firstname}}</li>
+            <li class="info">Last-name: {{user.lastname}}</li>
+            <li class="info">Email: {{user.email}}</li>
+            <li class="info">username: {{user.username}}</li>
+        </ul>
+        </div>
+        <ul class="button">
+            <li class="but"><button><a href="update">update</a></button></li>
+            <li class="but"><button><a href="delete">delete</a></button></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
