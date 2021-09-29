@@ -63,7 +63,7 @@ const log = async(req, res) => {
             username: name
         });
         if (newu == null) {
-            req.flash("server-error", "invalid username or password");
+            req.flash("server-error", "user not found");
             res.redirect("/index");
         } else {
             bcrypt.compare(pass, newu.password, (err, result) => {
@@ -83,4 +83,16 @@ const log = async(req, res) => {
         console.log(error);
     }
 };
-module.exports = { signup, log, index, registers };
+
+const del = (req, res) => {
+    const us = req.params.name;
+    register.deleteOne({ username: us }, (err) => {
+        if (err) {
+            console.log(err);
+            res.send("uff!");
+        } else {
+            res.send("sucessfully deleted");
+        }
+    })
+}
+module.exports = { signup, log, index, registers, del };
