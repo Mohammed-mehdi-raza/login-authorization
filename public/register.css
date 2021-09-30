@@ -19,7 +19,8 @@ body {
     box-shadow: 0vh 3vh 3vh rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+h1,
+h3 {
     color: black;
     size: 2vh;
     text-transform: capitalize;
@@ -60,6 +61,8 @@ a:hover {
 }
 
 .list {
+    min-width: 50px;
+    min-height: 50px;
     display: flex;
     justify-content: center;
 }
@@ -86,6 +89,7 @@ a:hover {
 #last,
 #username,
 #password,
+#cpassword,
 #email,
 #signup {
     margin: 2%;

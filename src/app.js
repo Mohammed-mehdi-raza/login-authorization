@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 
 app.set("view engine", "hbs");
 app.set("views", view_path);
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, "../public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookie_parser());
@@ -31,6 +31,9 @@ app.get('/', (req, res, next) => {
         serverSuccess: req.flash('server-success')
     });
 });
+app.get('*', (req, res) => {
+    res.send("route does not exist! ")
+})
 
 app.listen(port, () => {
     console.log(`server running on port ${port}`);

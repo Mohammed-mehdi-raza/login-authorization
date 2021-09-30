@@ -68,7 +68,9 @@ const log = async(req, res) => {
         } else {
             bcrypt.compare(pass, newu.password, (err, result) => {
                 if (err) {
-                    console.log(`error in comparng bcrypt: ${err}`);
+                    console.log(`
+                    error in comparng bcrypt: $ { err }
+                    `);
                 } else if (result) {
                     res.render("user", {
                         user: newu
@@ -84,9 +86,9 @@ const log = async(req, res) => {
     }
 };
 
-const del = (req, res) => {
+const del = async(req, res) => {
     const us = req.params.name;
-    register.deleteOne({ username: us }, (err) => {
+    await register.deleteOne({ username: us }, (err) => {
         if (err) {
             console.log(err);
             res.send("uff!");
@@ -95,4 +97,64 @@ const del = (req, res) => {
         }
     })
 }
-module.exports = { signup, log, index, registers, del };
+
+const up = async(req, res) => {
+    const name = req.params.name;
+    const unew = await register.findOne({ username: name });
+    res.render("update", {
+        user: unew,
+        serverSuccess: req.flash('server-success'),
+        serverError: req.flash('server-error')
+    });
+};
+
+const update = (req, res) => {
+    try {
+        const password = req.body.password;
+        const cpassword = req.body.cpassword;
+        if (password == cpassword) {
+            bcrypt.genSalt(10, (err, salt) => {
+                if (err) {
+                    console.log(`
+                    error in generating salt: $ { err }
+                    `);
+                } else {
+                    bcrypt.hash(password, salt, async(error, hash) => {
+                        if (error) {
+                            console.log(`
+                    error in hashing password: $ { error }
+                    `);
+                        } else {
+                            const name = req.params.name;
+                            register.updateOne({ username: name }, {
+                                username: req.body.username,
+                                firstname: req.body.firstname,
+                                lastname: req.body.lastname,
+                                email: req.body.email,
+                                password: hash
+                            }, (e, r) => {
+                                if (e) {
+                                    console.log(e);
+                                } else {
+                                    req.flash("server-success", "user updated successfully");
+                                    res.redirect("/log/update/:name");
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+        } else {
+            req.flash("server-error", "password does not match");
+            res.redirect("/log/update/:name");
+        }
+    } catch (error) {
+        console.log(`
+                    hello $ { error }
+                    `);
+    }
+}
+
+module.exports = { signup, log, index, registers, del, up, update };
+module.exports = { signup, log, index, registers, del, up, update };
