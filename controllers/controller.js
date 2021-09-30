@@ -68,9 +68,7 @@ const log = async(req, res) => {
         } else {
             bcrypt.compare(pass, newu.password, (err, result) => {
                 if (err) {
-                    console.log(`
-                    error in comparng bcrypt: $ { err }
-                    `);
+                    console.log(`error in comparng bcrypt: ${err}`);
                 } else if (result) {
                     res.render("user", {
                         user: newu
