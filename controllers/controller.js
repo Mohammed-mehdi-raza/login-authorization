@@ -1,6 +1,8 @@
 const register = require('../models/register.js');
 const bcrypt = require('bcryptjs');
 //const flash = require('connect-flash');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto')
 
 const index = (req, res) => {
     res.render("index", {
@@ -85,15 +87,20 @@ const log = async(req, res) => {
 };
 
 const del = async(req, res) => {
-    const us = req.params.name;
-    await register.deleteOne({ username: us }, (err) => {
-        if (err) {
-            console.log(err);
-            res.send("uff!");
-        } else {
-            res.send("sucessfully deleted");
-        }
-    })
+    try {
+        const us = req.params.name;
+        await register.deleteOne({ username: us }, (err) => {
+            if (err) {
+                console.log(err);
+                res.send("uff!");
+            } else {
+                req.flash("server-success", "successfully deleted ");
+                res.redirect("/index");
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const up = async(req, res) => {
@@ -113,15 +120,11 @@ const update = (req, res) => {
         if (password == cpassword) {
             bcrypt.genSalt(10, (err, salt) => {
                 if (err) {
-                    console.log(`
-                    error in generating salt: $ { err }
-                    `);
+                    console.log(`error in generating salt: ${err} `);
                 } else {
                     bcrypt.hash(password, salt, async(error, hash) => {
                         if (error) {
-                            console.log(`
-                    error in hashing password: $ { error }
-                    `);
+                            console.log(`error in hashing password: ${error}`);
                         } else {
                             const name = req.params.name;
                             register.updateOne({ username: name }, {
@@ -147,12 +150,120 @@ const update = (req, res) => {
             req.flash("server-error", "password does not match");
             res.redirect("/log/update/:name");
         }
-    } catch (error) {
-        console.log(`
-                    hello $ { error }
-                    `);
+    } catch (err) {
+        console.log(err);
     }
 }
 
-module.exports = { signup, log, index, registers, del, up, update };
-module.exports = { signup, log, index, registers, del, up, update };
+const forgot = (req, res) => {
+    res.render("forgot", {
+        serverSucess: req.flash('server-sucess'),
+        serverError: req.flash('server-error')
+    });
+};
+
+
+const forg = async(req, res) => {
+    vEmail = req.body.vEmail;
+    try {
+        const u = await register.findOne({ email: vEmail });
+        if (u == null) {
+            req.flash('server-error', "Invalid Email");
+            res.redirect('/forgot');
+        } else {
+            try {
+                var buf = crypto.randomBytes(20);
+                var token = buf.toString('hex');
+                u.resetToken = token;
+                u.resetTimer = Date.now() + 3600000;
+                await u.save();
+                let transporter = nodemailer.createTransport({
+                    name: "SMTP",
+                    host: "smtp.gmail.com",
+                    port: 587,
+                    secure: false,
+                    auth: {
+                        user: "loginsite348@gmail.com",
+                        pass: "loginsite"
+                    }
+                });
+                const link = "http://localhost:3000/forgot/" + token;
+                const info = await transporter.sendMail({
+                    from: "loginsite348@gmail.com",
+                    to: u.email,
+                    subject: "Reset password",
+                    text: "Hi,\n\n To change your password go to he following link http://localhost:3000/forgot/" + token + "\n\n Note: This is only valid for one hour",
+                    html: `<p> Hi, <br><br> To change your password go to following link <a href=${link}>${link}</a><br><br>Note:This link is only valid for one hour</P>`
+                });
+                console.log(info);
+                req.flash('server-sucess', "An email has been sent to your account with further instructions");
+                res.redirect('/forgot');
+            } catch (e) {
+                console.log(e);
+                req.flash('server-error', "An error occured while sending Email");
+                res.redirect('/forgot');
+            }
+        }
+
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+const reset = async(req, res) => {
+    const token = req.params.token;
+    const u = await register.findOne({ resetToken: token, resetTimer: { $gt: Date.now() } });
+    if (u == null) {
+        res.json({
+            "message": "link has been expired"
+        });
+    } else {
+        res.render("reset", {
+            user: u,
+            serverSucess: req.flash('server-sucess'),
+            serverError: req.flash('server-error')
+        });
+    }
+};
+
+const pReset = async(req, res) => {
+    try {
+        const pass = req.body.password;
+        const cpass = req.body.cpassword;
+        if (pass == cpass) {
+            bcrypt.genSalt(10, (err, salt) => {
+                if (err) {
+                    console.log(`error in generating salt: ${err} `);
+                } else {
+                    bcrypt.hash(pass, salt, async(error, hash) => {
+                        if (error) {
+                            console.log(`error in hashing password: ${error}`);
+                        } else {
+                            const token = req.params.token;
+                            register.updateOne({ resetToken: token }, {
+                                password: hash,
+                                resetToken: null,
+                                resetTimer: null
+                            }, (e, r) => {
+                                if (e) {
+                                    console.log(e);
+                                } else {
+                                    req.flash("server-success", "password changed successfully");
+                                    res.redirect("/index");
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            req.flash("server-error", "password does not match");
+            res.redirect("/forgot/" + req.params.token);
+        }
+    } catch (e) {
+        console.log(e)
+    }
+
+};
+
+module.exports = { signup, log, index, registers, del, up, update, forgot, forg, reset, pReset };

@@ -1,0 +1,66 @@
+body {
+    background: -webkit-linear-gradient(left, #a445b2, #fa4299);
+}
+
+.outer {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    min-width: 30vw;
+    min-height: 50vh;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    box-shadow: 1px 1px 2px 2px rgb(114, 113, 113);
+    border-radius: 2%;
+}
+
+.inner {
+    padding: 5%;
+}
+
+h1 {
+    color: black;
+    text-transform: capitalize;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgb(78, 74, 74);
+}
+
+form {
+    padding: 5%;
+}
+
+#email,
+#eemail {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 4%;
+}
+
+#sub {
+    padding: 4%;
+    border-radius: 2%;
+    background-color: #fa4299;
+    border: none;
+    border-radius: 10%;
+    box-shadow: 2% 2% 2% 2% rgb(107, 107, 107);
+}
+
+.success {
+    background-color: aquamarine;
+    padding: 3%;
+}
+
+.error {
+    background-color: rgb(255, 45, 45);
+    padding: 3%;
+}
+
+#sub:hover {
+    cursor: pointer;
+}

@@ -23,6 +23,12 @@ const users = new Schema({
         type: String,
         require: true,
         unique: true
+    },
+    resetToken: {
+        type: String
+    },
+    resetTimer: {
+        type: Date
     }
 });
 const register = mongoose.model('users', users);

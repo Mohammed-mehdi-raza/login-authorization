@@ -31,9 +31,10 @@ app.get('/', (req, res, next) => {
         serverSuccess: req.flash('server-success')
     });
 });
+
 app.get('*', (req, res) => {
     res.send("route does not exist! ")
-})
+});
 
 app.listen(port, () => {
     console.log(`server running on port ${port}`);
