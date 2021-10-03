@@ -187,12 +187,12 @@ const forg = async(req, res) => {
                         pass: "loginsite"
                     }
                 });
-                const link = "http://localhost:3000/forgot/" + token;
+                const link = "https://powerful-island-35627.herokuapp.com/forgot/" + token;
                 const info = await transporter.sendMail({
                     from: "loginsite348@gmail.com",
                     to: u.email,
                     subject: "Reset password",
-                    text: "Hi,\n\n To change your password go to he following link http://localhost:3000/forgot/" + token + "\n\n Note: This is only valid for one hour",
+                    text: "Hi,\n\n To change your password go to he following link https://powerful-island-35627.herokuapp.com/forgot/" + token + "\n\n Note: This is only valid for one hour",
                     html: `<p> Hi, <br><br> To change your password go to following link <a href=${link}>${link}</a><br><br>Note:This link is only valid for one hour</P>`
                 });
                 console.log(info);
