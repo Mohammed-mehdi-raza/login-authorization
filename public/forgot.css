@@ -18,6 +18,7 @@ body {
     justify-content: center;
     box-shadow: 1px 1px 2px 2px rgb(114, 113, 113);
     border-radius: 2%;
+    overflow: hidden;
 }
 
 .inner {
@@ -63,4 +64,12 @@ form {
 
 #sub:hover {
     cursor: pointer;
+}
+
+@media only screen and (max-width:500px),
+(max-height:500px) {
+    .container {
+        width: 80vw;
+        height: 60vh;
+    }
 }

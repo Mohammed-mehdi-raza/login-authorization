@@ -12,7 +12,7 @@ body {
 .container {
     overflow: hidden;
     width: 25vw;
-    max-height: 45vh;
+    height: 45vh;
     background: #fff;
     padding: 5vh;
     border-radius: 1vh;
@@ -130,4 +130,11 @@ p a {
     background-color: rgb(240, 24, 16);
     text-transform: capitalize;
     text-align: center;
+}
+
+@media screen and (max-width:700px) {
+    .container {
+        width: 60vw;
+        height: 60vh;
+    }
 }

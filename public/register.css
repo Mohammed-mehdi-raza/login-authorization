@@ -119,3 +119,11 @@ a:hover {
     text-transform: capitalize;
     text-align: center;
 }
+
+@media only screen and (max-width:1050px),
+(max-height:600px) {
+    .container {
+        width: 80vw;
+        height: 70vh;
+    }
+}
