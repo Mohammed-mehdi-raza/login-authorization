@@ -72,4 +72,7 @@ form {
         width: 80vw;
         height: 60vh;
     }
+    #sub {
+        width: 50%;
+    }
 }
